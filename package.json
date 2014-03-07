@@ -1,0 +1,28 @@
+{
+  "name": "light",
+  "version": "0.0.1",
+  "description": "A lightweight PHP framework MVC based for less than 1Mb !",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thiphariel/light"
+  },
+  "authors": [
+    {
+      "name": "Thomas Collot",
+      "email": "contact@tcollot.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thiphariel/light/issues"
+  },
+  "homepage": "https://github.com/thiphariel/light",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-phpcs": "~0.2.2",
+    "grunt-contrib-less": "~0.10.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "load-grunt-tasks": "~0.4.0"
+  }
+}
