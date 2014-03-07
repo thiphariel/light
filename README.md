@@ -1,15 +1,16 @@
 Light
 =====
-A lightweight PHP framework MVC based for less than 1Mb !
+A lightweight PHP framework MVC based for less than 1Mb ! (PSR2 compliant)
 
 ##ALPHA VERSION
 
 #Installation
 
-**Light is not based with composer autoload anymore (for a while ?)**
+**Light is based with composer autoload, make sure your ready to use it**
 
 * Download the zip tarball or clone git repo.
 * Extract it where you want
+* Run <code>composer install --no-dev</code>
 * Create your Database (default name is light)
 * Here you go !
 
@@ -28,10 +29,10 @@ use Light\App\Core\Lightemplate;
 /**
  * Define some vars used for database connection
  */
-define('_host', '127.0.0.1', true);
-define('_database', 'light', true);
-define('_login', 'root', true);
-define('_pwd', '', true);
+define('_HOST', '127.0.0.1', true);
+define('_DATABASE', 'light', true);
+define('_LOGIN', 'root', true);
+define('_PWD', '', true);
 
 /**
  * Lightemplate configuration
@@ -68,6 +69,9 @@ Light is built with his own PHP template engine. For now, it only include some b
 * Comments
 
   <code>//@ A comment that will not be visible in the compiled php file :)</code>
+* Dump var
+
+  <code>@dump(var)</code>
 * Template inheritance
 
   <code>@use "mytemplate.html"</code>
