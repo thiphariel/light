@@ -1,3 +1,4 @@
 /web/cache/
 /node_modules/
 /vendor/bin/
+composer.lock
