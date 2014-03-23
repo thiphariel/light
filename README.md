@@ -29,10 +29,10 @@ use Light\App\Core\Lightemplate;
 /**
  * Define some vars used for database connection
  */
-define('_HOST', '127.0.0.1', true);
+define('_HOST', 'localhost', true);
 define('_DATABASE', 'light', true);
 define('_LOGIN', 'root', true);
-define('_PWD', '', true);
+define('_PWD', 'root', true);
 
 /**
  * Lightemplate configuration
