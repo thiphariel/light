@@ -6,8 +6,6 @@
 
 namespace Light\App;
 
-use Light\App\Psr4Autoload;
-
 class Kernel
 {
     /**

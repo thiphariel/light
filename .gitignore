@@ -1,4 +1,5 @@
+/dist/
 /web/cache/
 /node_modules/
-/vendor/bin/
+/vendor/
 composer.lock
