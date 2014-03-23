@@ -2,6 +2,7 @@
     "name": "thiphariel/light",
     "description": "A lightweight PHP framework MVC based",
     "keywords": ["light", "php", "framework"],
+    "version": "0.0.1",
     "homepage": "https://github.com/thiphariel/light",
     "license": "MIT",
     "authors": [
