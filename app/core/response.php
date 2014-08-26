@@ -69,7 +69,7 @@ class Response
         if (!file_exists(_src . 'controllers/' . $this->request->controller . '.php')) {
             $this->notFound('<h1>404 Not found</h1><p>Oups, this request cannot be completed ... I\'m not able to find this page :(</p><p><a href="javascript:history.back()">&larr; Back</a></p>');
         }
-        
+
         return new $name($this->request, $this->kernel);
     }
 
