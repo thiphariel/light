@@ -55,7 +55,7 @@ class Kernel
     {
         // Include composer autoloader
         require_once _vendor . 'autoload.php';
-        
+
         try {
             $this->pdo = new \PDO(
                 'mysql:host='._host.';dbname='._database.';',

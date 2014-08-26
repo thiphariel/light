@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Handle model loading and init the template engine
  * @author Thomas Collot

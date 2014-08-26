@@ -12,7 +12,7 @@ use Light\App\Core\Lightemplate;
 define('_HOST', 'localhost', true);
 define('_DATABASE', 'light', true);
 define('_LOGIN', 'root', true);
-define('_PWD', 'root', true);
+define('_PWD', '', true);
 
 /**
  * Lightemplate configuration
@@ -21,7 +21,7 @@ Lightemplate::base('base');                     // Base url var name
 Lightemplate::assets('assets');                 // Assets var name
 Lightemplate::dir(_src . 'views/');             // Template file directory
 /**
- * Cache file directory / time in cache (in seconds) - 
+ * Cache file directory / time in cache (in seconds) -
  * @param string  cache directory path (@nullable -> Light wont use cache system)
  * @param int     time to cache (in seconds)
  */

@@ -183,10 +183,10 @@ class Lightemplate
                 continue;
             } elseif (preg_match("/@use.*(\"|')(.*)(\"|')/", $string, $result)) {
                 // Include template
-                $parent = $result[2];
+                $parent = trim($result[2]);
             } elseif (preg_match("/@block\s+(.*)/", $string, $result)) {
                 // Block
-                $blockName = $result[1];
+                $blockName = trim($result[1]);
                 $blocks[$blockName] = array();
 
                 while (($string = array_shift($code)) != "@endblock") {
@@ -194,13 +194,13 @@ class Lightemplate
                 }
             } elseif (preg_match("/@dump.*\((.*)\)/", $string, $result)) {
                 // Dump
-                $var = '$' . $result[1];
+                $var = '$' . trim($result[1]);
 
                 $compiled .= '<?= var_dump(' . $var . '); ?>';
             } elseif (preg_match("/@if.*\(([!]?)(\w+)\)/", $string, $result)) {
                 // "if isset or !isset"
-                $operator = $result[1];
-                $var = '$' . $result[2];
+                $operator = trim($result[1]);
+                $var = '$' . trim($result[2]);
 
                 if (null == $operator) {
                     $compiled .= '<?php if (isset(' . $var . ')): ?>';
@@ -209,14 +209,14 @@ class Lightemplate
                 }
             } elseif (preg_match("/@if.*\((\w+|\w+)\s+(==|!=|>=|<=|>|<)\s+(\"\w+\"|'\w+'|\w+)\)/", $string, $result)) {
                 // Conditionnal if
-                $var = '$' . $result[1];
-                $operator = $result[2];
-                $condition = $result[3];
+                $var = '$' . trim($result[1]);
+                $operator = trim($result[2]);
+                $condition = trim($result[3]);
                 $compiled .= '<?php if (' . $var . ' ' . $operator . ' ' . $condition . '): ?>';
             } elseif (preg_match("/@elseif.*\(([!]?)(\w+)\)/", $string, $result)) {
                 // "else if isset or !isset"
-                $operator = $result[1];
-                $var = '$' . $result[2];
+                $operator = trim($result[1]);
+                $var = '$' . trim($result[2]);
 
                 if (null == $operator) {
                     $compiled .= '<?php elseif (isset(' . $var . ')): ?>';
@@ -225,9 +225,9 @@ class Lightemplate
                 }
             } elseif (preg_match("/@elseif.*\((\w+|\w+)\s+(==|!=|>=|<=|>|<)\s+(\"\w+\"|'\w+'|\w+)\)/", $string, $result)) {
                 // Conditionnal else if
-                $var = '$' . $result[1];
-                $operator = $result[2];
-                $condition = $result[3];
+                $var = '$' . trim($result[1]);
+                $operator = trim($result[2]);
+                $condition = trim($result[3]);
                 $compiled .= '<?php elseif (' . $var . ' ' . $operator . ' ' . $condition . '): ?>';
             } elseif (false !== strpos($string, '@else')) {
                 // else
@@ -237,8 +237,8 @@ class Lightemplate
                 $compiled .= '<?php endif; ?>';
             } elseif (preg_match("/@foreach.*\((\w+)\s+as+\s(\w+)\)/", $string, $result)) {
                 // foreach
-                $iterations = '$' . $result[1];
-                $item = '$' . $result[2];
+                $iterations = '$' . trim($result[1]);
+                $item = '$' . trim($result[2]);
                 $compiled .= '<?php foreach(' . $iterations . ' as ' . $item . '): ?>';
             } elseif (false !== strpos($string, '@endforeach')) {
                 // end foreach
@@ -247,11 +247,11 @@ class Lightemplate
                 foreach ($result[0] as $key => $value) {
                     // Object case
                     if (null != $result[1][$key]) {
-                        $var = '$' . $result[1][$key];
-                        $attribute = $result[2][$key];
+                        $var = '$' . trim($result[1][$key]);
+                        $attribute = trim($result[2][$key]);
                         $string = str_replace($value, '<?= ' . $var . '->' . $attribute . ' ?>', $string);
                     } else { // Var case
-                        $var = '$' . $result[3][$key];
+                        $var = '$' . trim($result[3][$key]);
                         $string = str_replace($value, '<?= ' . $var . ' ?>', $string);
                     }
                 }

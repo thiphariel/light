@@ -12,7 +12,7 @@ class Model
 {
     protected $table = null;
     protected $pdo;
- 
+
     public function __construct(Kernel $kernel)
     {
         //$this->table = join('', array_slice(explode('\\', strtolower(get_class($this))), -1)) . 's';
