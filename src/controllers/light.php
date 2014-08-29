@@ -18,6 +18,10 @@ class Light extends Controller
     {
         $this->template->assign('title', 'Index');
 
+        $this->model('light');
+        $response = $this->light->select();
+        $this->template->assign('response', $response);
+
         $this->template->display('light/index.html');
     }
 }

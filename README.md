@@ -41,7 +41,7 @@ Lightemplate::base('base');					// Base url var name
 Lightemplate::assets('assets');				// Assets var name
 Lightemplate::dir(_src . 'views/');			// Template file directory
 /**
- * Cache file directory / time in cache (in seconds) - 
+ * Cache file directory / time in cache (in seconds) -
  * @param string  cache directory path (@nullable -> Light wont use cache system)
  * @param int 	  time to cache (in seconds)
  */
@@ -49,11 +49,11 @@ Lightemplate::cache(null, 0);
 ```
 
 Lightemplate configuration uses 4 static functions.
-* <code>Lightemplate::base(string)</code> : Use it to rename the var used in the templates files. This is usefull in links href attributes to avoid some manual writing : 
+* <code>Lightemplate::base(string)</code> : Use it to rename the var used in the templates files. This is usefull in links href attributes to avoid some manual writing :
   ```
   <a href="@base/index">Index</a>
   ```
-* <code>Lightemplate::assets(string)</code> : Same as the previous one, except this one will be mainly used for assets (css, img, js ...) : 
+* <code>Lightemplate::assets(string)</code> : Same as the previous one, except this one will be mainly used for assets (css, img, js ...) :
   ```
   <img src="@assets/img/logo.png">Index</a>
   ```
@@ -78,12 +78,12 @@ Light is built with his own PHP template engine. For now, it only include some b
 * Child blocks
 
   Add this block in the parent
-  
+
   ```php
   @block achild
   @endblock
   ```
-  
+
   Then, the child must look like
   ```php
   @block achild
@@ -93,17 +93,17 @@ Light is built with his own PHP template engine. For now, it only include some b
 * Conditions (if, elseif, else) - (Only one condition for now)
 
   ```php
-  @if (test)
+  @if test
     <p>test is defined !</p>
-  @elseif (!other)
+  @elseif !other
     <p>other is not defined ! </p>
   @endif
-  
+
   --------------------------------
-  
-  @if (test == 10)
+
+  @if test == 10
     <p>Test is 10 !</p>
-  @elseif (test >= 11)
+  @elseif test >= 11
     <p>Test is bigger or equal to 11</p>
   @else
     <p>Test is less than 10</p>
@@ -112,7 +112,7 @@ Light is built with his own PHP template engine. For now, it only include some b
 * Loop (foreach style)
 
   ```php
-  @foreach (users as user)
+  @foreach users as user
     <p>@user->name</p>
   @endforeach
   ```
