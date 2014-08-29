@@ -8,4 +8,11 @@
 
 		<p>Index</p>
 	</section>
+
+    <section>
+        @foreach response as resp
+            <li>@resp->title</li>
+            <p>@resp->content</p>
+        @endforeach
+    </section>
 @endblock

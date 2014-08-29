@@ -15,9 +15,8 @@ class Model
 
     public function __construct(Kernel $kernel)
     {
-        //$this->table = join('', array_slice(explode('\\', strtolower(get_class($this))), -1)) . 's';
         $this->table = basename(strtolower(get_class($this))) . 's';
-        $this->pdo = $kernel->pdo();
+        $this->pdo = PDO::singleton();
     }
 
     public function select()

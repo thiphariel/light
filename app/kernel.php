@@ -1,10 +1,12 @@
 <?php
 /**
- * App kernel (handle PDO instance, autoload and more)
+ * App kernel (autoload and more)
  * @author Thomas Collot
  */
 
 namespace Light\App;
+
+use Light\App\Core\PDO;
 
 class Kernel
 {
@@ -21,18 +23,6 @@ class Kernel
     }
 
     /**
-     * PDO instance
-     */
-    private $pdo;
-    /**
-     * Retrieve active PDO instance
-     */
-    public function pdo()
-    {
-        return $this->pdo;
-    }
-
-    /**
      * Current version number (will be used in the future, for stability)
      */
     const VERSION = '0.0.1';
@@ -44,7 +34,6 @@ class Kernel
     public function __construct($debug = false)
     {
         $this->debug = $debug;
-        $this->pdo = null;
     }
 
     /**
@@ -55,21 +44,5 @@ class Kernel
     {
         // Include composer autoloader
         require_once _vendor . 'autoload.php';
-
-        try {
-            $this->pdo = new \PDO(
-                'mysql:host='._host.';dbname='._database.';',
-                _login,
-                _pwd,
-                array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
-            );
-            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
-        } catch (\PDOException $e) {
-            if ($this->debug) {
-                die($e->getMessage());
-            } else {
-                die('Oups, there is a problem, Light could not be able to reach the database ...');
-            }
-        }
     }
 }

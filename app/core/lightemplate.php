@@ -105,6 +105,36 @@ class Lightemplate
     private $vars;
 
     /**
+     * All Lightemplate engine allowed tags
+     */
+    private static $tags = array(
+        'comments'   => '(\/\/@\s*.*)',
+        'use'        => '(@use.*)',
+        'block'      => '(@block.*)',
+        'if'         => '(@if.*)',
+        'elseif'     => '(@elseif.*)',
+        'else'       => '(@else)',
+        'endif'      => '(@endif)',
+        'foreach'    => '(@foreach.*)',
+        'endforeach' => '(@endforeach)',
+        'var'        => '(@\S+)'
+    );
+
+    /**
+     * All Lightemplate conditionnal operators allowed
+     */
+    private static $operators = array(
+        'equal'               => '==',
+        'strict equal'        => '===',
+        'not equal'           => '!=',
+        'strict not equal'    => '!==',
+        'greater than'        => '>',
+        'lower than'          => '<',
+        'strict greater than' => '>=',
+        'strict lower than'   => '<='
+    );
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -152,21 +182,7 @@ class Lightemplate
             $code = file_get_contents(self::$dir . $name);
         }
 
-        // All Lightemplate engine tags
-        $tags = array(
-            'comments'   => '(\/\/@\s*.*)',
-            'use'        => '(@use.*)',
-            'block'      => '(@block.*)',
-            'if'         => '(@if.*)',
-            'elseif'     => '(@elseif.*)',
-            'else'       => '(@else)',
-            'endif'      => '(@endif)',
-            'foreach'    => '(@foreach.*)',
-            'endforeach' => '(@endforeach)',
-            'var'        => '(@\S+)'
-        );
-
-        $tags = "/" . join("|", $tags) . "/";
+        $tags = "/" . join("|", self::$tags) . "/";
 
         // Split all the code with tags
         $code = preg_split($tags, $code, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
@@ -197,36 +213,46 @@ class Lightemplate
                 $var = '$' . trim($result[1]);
 
                 $compiled .= '<?= var_dump(' . $var . '); ?>';
-            } elseif (preg_match("/@if.*\(([!]?)(\w+)\)/", $string, $result)) {
+            } elseif (preg_match("/@if\s*([!]?)(\w+)/", $string, $result)) {
                 // "if isset or !isset"
                 $operator = trim($result[1]);
                 $var = '$' . trim($result[2]);
 
-                if (null == $operator) {
+                if (null === $operator) {
                     $compiled .= '<?php if (isset(' . $var . ')): ?>';
                 } else {
                     $compiled .= '<?php if (!isset(' . $var . ')): ?>';
                 }
-            } elseif (preg_match("/@if.*\((\w+|\w+)\s+(==|!=|>=|<=|>|<)\s+(\"\w+\"|'\w+'|\w+)\)/", $string, $result)) {
+            } elseif (preg_match("/@if\s*(\w+|\w+)\s+(.*)\s+(\"\w+\"|'\w+'|\w+)/", $string, $result)) {
                 // Conditionnal if
                 $var = '$' . trim($result[1]);
                 $operator = trim($result[2]);
+
+                if (!in_array($operator, self::$operators)) {
+                    throw new \Exception('This conditionnal operator is not allowed : ' . $operator);
+                }
+
                 $condition = trim($result[3]);
                 $compiled .= '<?php if (' . $var . ' ' . $operator . ' ' . $condition . '): ?>';
-            } elseif (preg_match("/@elseif.*\(([!]?)(\w+)\)/", $string, $result)) {
+            } elseif (preg_match("/@elseif\s*([!]?)(\w+)/", $string, $result)) {
                 // "else if isset or !isset"
                 $operator = trim($result[1]);
                 $var = '$' . trim($result[2]);
 
-                if (null == $operator) {
+                if (null === $operator) {
                     $compiled .= '<?php elseif (isset(' . $var . ')): ?>';
                 } else {
                     $compiled .= '<?php elseif (!isset(' . $var . ')): ?>';
                 }
-            } elseif (preg_match("/@elseif.*\((\w+|\w+)\s+(==|!=|>=|<=|>|<)\s+(\"\w+\"|'\w+'|\w+)\)/", $string, $result)) {
+            } elseif (preg_match("/@elseif\s*(\w+|\w+)\s+(.*)\s+(\"\w+\"|'\w+'|\w+)/", $string, $result)) {
                 // Conditionnal else if
                 $var = '$' . trim($result[1]);
                 $operator = trim($result[2]);
+
+                if (!in_array($operator, self::$operators)) {
+                    throw new \Exception('This conditionnal operator is not allowed : ' . $operator);
+                }
+
                 $condition = trim($result[3]);
                 $compiled .= '<?php elseif (' . $var . ' ' . $operator . ' ' . $condition . '): ?>';
             } elseif (false !== strpos($string, '@else')) {
@@ -235,7 +261,7 @@ class Lightemplate
             } elseif (false !== strpos($string, '@endif')) {
                 // end if
                 $compiled .= '<?php endif; ?>';
-            } elseif (preg_match("/@foreach.*\((\w+)\s+as+\s(\w+)\)/", $string, $result)) {
+            } elseif (preg_match("/@foreach\s*(\w+)\s*as\s*(\w+)/", $string, $result)) {
                 // foreach
                 $iterations = '$' . trim($result[1]);
                 $item = '$' . trim($result[2]);
@@ -246,7 +272,7 @@ class Lightemplate
             } elseif (preg_match_all('/@(\w+)->(\w+)|@(\w+)/', $string, $result)) {
                 foreach ($result[0] as $key => $value) {
                     // Object case
-                    if (null != $result[1][$key]) {
+                    if (null !== $result[1][$key]) {
                         $var = '$' . trim($result[1][$key]);
                         $attribute = trim($result[2][$key]);
                         $string = str_replace($value, '<?= ' . $var . '->' . $attribute . ' ?>', $string);
@@ -306,11 +332,19 @@ class Lightemplate
 
             // If the file is not compiled yet OR the cache file is expired, compile it
             if (!file_exists($filename) || filemtime($filename) < self::$expire) {
-                $this->compile($file);
+                try {
+                    $this->compile($file);
+                } catch (\Exception $e) {
+                    die($e);
+                }
             }
         } else {
-            $this->compile($file);
-            $filename = self::$dir . substr(basename($file), 0, -5) . '.light.php';
+            try {
+                $this->compile($file);
+                $filename = self::$dir . substr(basename($file), 0, -5) . '.light.php';
+            } catch (\Exception $e) {
+                die($e);
+            }
         }
 
         // Turn on the output buffering, extract template vars then include the compiled/cached file
